@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coderwhs.interview.mapper.QuestionBankQuestionMapper">
+  <resultMap id="BaseResultMap" type="com.coderwhs.interview.model.entity.QuestionBankQuestion">
+    <!--@mbg.generated-->
+    <!--@Table question_bank_question-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="questionBankId" jdbcType="BIGINT" property="questionbankid" />
+    <result column="questionId" jdbcType="BIGINT" property="questionid" />
+    <result column="userId" jdbcType="BIGINT" property="userid" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, questionBankId, questionId, userId, createTime, updateTime
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update question_bank_question
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="questionBankId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.questionbankid,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="questionId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.questionid,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="userId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userid,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="createTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.createtime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="updateTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.updatetime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update question_bank_question
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="questionBankId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.questionbankid != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.questionbankid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="questionId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.questionid != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.questionid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="userId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.userid != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.userid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="createTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createtime != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.createtime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="updateTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updatetime != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.updatetime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into question_bank_question
+    (questionBankId, questionId, userId, createTime, updateTime)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.questionbankid,jdbcType=BIGINT}, #{item.questionid,jdbcType=BIGINT}, #{item.userid,jdbcType=BIGINT},
+        #{item.createtime,jdbcType=TIMESTAMP}, #{item.updatetime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.coderwhs.interview.model.entity.QuestionBankQuestion" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into question_bank_question
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      questionBankId,
+      questionId,
+      userId,
+      createTime,
+      updateTime,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      #{questionbankid,jdbcType=BIGINT},
+      #{questionid,jdbcType=BIGINT},
+      #{userid,jdbcType=BIGINT},
+      #{createtime,jdbcType=TIMESTAMP},
+      #{updatetime,jdbcType=TIMESTAMP},
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      questionBankId = #{questionbankid,jdbcType=BIGINT},
+      questionId = #{questionid,jdbcType=BIGINT},
+      userId = #{userid,jdbcType=BIGINT},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.coderwhs.interview.model.entity.QuestionBankQuestion" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into question_bank_question
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="questionbankid != null">
+        questionBankId,
+      </if>
+      <if test="questionid != null">
+        questionId,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="questionbankid != null">
+        #{questionbankid,jdbcType=BIGINT},
+      </if>
+      <if test="questionid != null">
+        #{questionid,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="questionbankid != null">
+        questionBankId = #{questionbankid,jdbcType=BIGINT},
+      </if>
+      <if test="questionid != null">
+        questionId = #{questionid,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

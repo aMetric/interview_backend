@@ -1,24 +1,296 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coderwhs.interview.mapper.UserMapper">
-    <resultMap id="BaseResultMap" type="com.coderwhs.interview.model.entity.User">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="unionId" column="unionId" jdbcType="VARCHAR"/>
-        <result property="mpOpenId" column="mpOpenId" jdbcType="VARCHAR"/>
-        <result property="userName" column="userName" jdbcType="VARCHAR"/>
-        <result property="userAvatar" column="userAvatar" jdbcType="VARCHAR"/>
-        <result property="userProfile" column="userProfile" jdbcType="VARCHAR"/>
-        <result property="userRole" column="userRole" jdbcType="VARCHAR"/>
-        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
-        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
-    </resultMap>
-
-    <sql id="Base_Column_List">
-        id,unionId,mpOpenId,
-        userName,userAvatar,userProfile,
-        userRole,createTime,updateTime,isDelete
-    </sql>
+  <resultMap id="BaseResultMap" type="com.coderwhs.interview.model.entity.User">
+    <!--@mbg.generated-->
+    <!--@Table `user`-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="userAccount" jdbcType="VARCHAR" property="userAccount" />
+    <result column="userPassword" jdbcType="VARCHAR" property="userPassword" />
+    <result column="unionId" jdbcType="VARCHAR" property="unionId" />
+    <result column="mpOpenId" jdbcType="VARCHAR" property="mpOpenId" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="userAvatar" jdbcType="VARCHAR" property="userAvatar" />
+    <result column="userProfile" jdbcType="VARCHAR" property="userProfile" />
+    <result column="userRole" jdbcType="VARCHAR" property="userRole" />
+    <result column="editTime" jdbcType="TIMESTAMP" property="editTime" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="isDelete" jdbcType="TINYINT" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, userAccount, userPassword, unionId, mpOpenId, userName, userAvatar, userProfile,
+    userRole, editTime, createTime, updateTime, isDelete
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update `user`
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="userAccount = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userAccount,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="userPassword = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userPassword,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="unionId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.unionId,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="mpOpenId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.mpOpenId,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="userName = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userName,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="userAvatar = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userAvatar,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="userProfile = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userProfile,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="userRole = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userRole,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="editTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.editTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="createTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="updateTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="isDelete = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.isDelete,jdbcType=TINYINT}
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into `user`
+    (userAccount, userPassword, unionId, mpOpenId, userName, userAvatar, userProfile,
+      userRole, editTime, createTime, updateTime, isDelete)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.userAccount,jdbcType=VARCHAR}, #{item.userPassword,jdbcType=VARCHAR}, #{item.unionId,jdbcType=VARCHAR},
+        #{item.mpOpenId,jdbcType=VARCHAR}, #{item.userName,jdbcType=VARCHAR}, #{item.userAvatar,jdbcType=VARCHAR},
+        #{item.userProfile,jdbcType=VARCHAR}, #{item.userRole,jdbcType=VARCHAR}, #{item.editTime,jdbcType=TIMESTAMP},
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.isDelete,jdbcType=TINYINT}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.coderwhs.interview.model.entity.User" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into `user`
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      userAccount,
+      userPassword,
+      unionId,
+      mpOpenId,
+      userName,
+      userAvatar,
+      userProfile,
+      userRole,
+      editTime,
+      createTime,
+      updateTime,
+      isDelete,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      #{userAccount,jdbcType=VARCHAR},
+      #{userPassword,jdbcType=VARCHAR},
+      #{unionId,jdbcType=VARCHAR},
+      #{mpOpenId,jdbcType=VARCHAR},
+      #{userName,jdbcType=VARCHAR},
+      #{userAvatar,jdbcType=VARCHAR},
+      #{userProfile,jdbcType=VARCHAR},
+      #{userRole,jdbcType=VARCHAR},
+      #{editTime,jdbcType=TIMESTAMP},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP},
+      #{isDelete,jdbcType=TINYINT},
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      userAccount = #{userAccount,jdbcType=VARCHAR},
+      userPassword = #{userPassword,jdbcType=VARCHAR},
+      unionId = #{unionId,jdbcType=VARCHAR},
+      mpOpenId = #{mpOpenId,jdbcType=VARCHAR},
+      userName = #{userName,jdbcType=VARCHAR},
+      userAvatar = #{userAvatar,jdbcType=VARCHAR},
+      userProfile = #{userProfile,jdbcType=VARCHAR},
+      userRole = #{userRole,jdbcType=VARCHAR},
+      editTime = #{editTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      isDelete = #{isDelete,jdbcType=TINYINT},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.coderwhs.interview.model.entity.User" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into `user`
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userAccount != null">
+        userAccount,
+      </if>
+      <if test="userPassword != null">
+        userPassword,
+      </if>
+      <if test="unionId != null">
+        unionId,
+      </if>
+      <if test="mpOpenId != null">
+        mpOpenId,
+      </if>
+      <if test="userName != null">
+        userName,
+      </if>
+      <if test="userAvatar != null">
+        userAvatar,
+      </if>
+      <if test="userProfile != null">
+        userProfile,
+      </if>
+      <if test="userRole != null">
+        userRole,
+      </if>
+      <if test="editTime != null">
+        editTime,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
+      <if test="isDelete != null">
+        isDelete,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userAccount != null">
+        #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null">
+        #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="mpOpenId != null">
+        #{mpOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAvatar != null">
+        #{userAvatar,jdbcType=VARCHAR},
+      </if>
+      <if test="userProfile != null">
+        #{userProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="userRole != null">
+        #{userRole,jdbcType=VARCHAR},
+      </if>
+      <if test="editTime != null">
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userAccount != null">
+        userAccount = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        userPassword = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null">
+        unionId = #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="mpOpenId != null">
+        mpOpenId = #{mpOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        userName = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAvatar != null">
+        userAvatar = #{userAvatar,jdbcType=VARCHAR},
+      </if>
+      <if test="userProfile != null">
+        userProfile = #{userProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="userRole != null">
+        userRole = #{userRole,jdbcType=VARCHAR},
+      </if>
+      <if test="editTime != null">
+        editTime = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        isDelete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
 </mapper>

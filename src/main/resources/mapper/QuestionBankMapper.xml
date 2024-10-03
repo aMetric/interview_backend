@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coderwhs.interview.mapper.QuestionBankMapper">
+  <resultMap id="BaseResultMap" type="com.coderwhs.interview.model.entity.QuestionBank">
+    <!--@mbg.generated-->
+    <!--@Table question_bank-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="userId" jdbcType="BIGINT" property="userid" />
+    <result column="editTime" jdbcType="TIMESTAMP" property="edittime" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="isDelete" jdbcType="TINYINT" property="isdelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, title, description, picture, userId, editTime, createTime, updateTime, isDelete
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update question_bank
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="title = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.title,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="description = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.description,jdbcType=LONGVARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="picture = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.picture,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="userId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.userid,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="editTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.edittime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="createTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.createtime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="updateTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.updatetime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="isDelete = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.isdelete,jdbcType=TINYINT}
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update question_bank
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="title = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.title != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.title,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="description = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.description != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.description,jdbcType=LONGVARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="picture = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.picture != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.picture,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="userId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.userid != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.userid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="editTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.edittime != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.edittime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="createTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createtime != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.createtime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="updateTime = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updatetime != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.updatetime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="isDelete = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.isdelete != null">
+            when id = #{item.id,jdbcType=BIGINT} then #{item.isdelete,jdbcType=TINYINT}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into question_bank
+    (title, description, picture, userId, editTime, createTime, updateTime, isDelete)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.title,jdbcType=VARCHAR}, #{item.description,jdbcType=LONGVARCHAR}, #{item.picture,jdbcType=VARCHAR},
+        #{item.userid,jdbcType=BIGINT}, #{item.edittime,jdbcType=TIMESTAMP}, #{item.createtime,jdbcType=TIMESTAMP},
+        #{item.updatetime,jdbcType=TIMESTAMP}, #{item.isdelete,jdbcType=TINYINT})
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.coderwhs.interview.model.entity.QuestionBank" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into question_bank
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      title,
+      description,
+      picture,
+      userId,
+      editTime,
+      createTime,
+      updateTime,
+      isDelete,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      #{title,jdbcType=VARCHAR},
+      #{description,jdbcType=LONGVARCHAR},
+      #{picture,jdbcType=VARCHAR},
+      #{userid,jdbcType=BIGINT},
+      #{edittime,jdbcType=TIMESTAMP},
+      #{createtime,jdbcType=TIMESTAMP},
+      #{updatetime,jdbcType=TIMESTAMP},
+      #{isdelete,jdbcType=TINYINT},
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      title = #{title,jdbcType=VARCHAR},
+      description = #{description,jdbcType=LONGVARCHAR},
+      picture = #{picture,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=BIGINT},
+      editTime = #{edittime,jdbcType=TIMESTAMP},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      isDelete = #{isdelete,jdbcType=TINYINT},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.coderwhs.interview.model.entity.QuestionBank" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into question_bank
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="edittime != null">
+        editTime,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
+      </if>
+      <if test="isdelete != null">
+        isDelete,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="edittime != null">
+        #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="edittime != null">
+        editTime = #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null">
+        isDelete = #{isdelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>
