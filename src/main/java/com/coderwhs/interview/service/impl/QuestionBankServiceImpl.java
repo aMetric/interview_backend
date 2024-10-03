@@ -79,8 +79,8 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         Long notId = questionBankQueryRequest.getNotId();
         String title = questionBankQueryRequest.getTitle();
         String searchText = questionBankQueryRequest.getSearchText();
-        // String sortField = questionBankQueryRequest.getSortField();
-        // String sortOrder = questionBankQueryRequest.getSortOrder();
+        String sortField = questionBankQueryRequest.getSortField();
+        String sortOrder = questionBankQueryRequest.getSortOrder();
         String description = questionBankQueryRequest.getDescription();
         String picture = questionBankQueryRequest.getPicture();
         Long userId = questionBankQueryRequest.getUserId();
@@ -100,9 +100,9 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
         // 排序规则
-        // queryWrapper.orderBy(SqlUtils.validSortField(sortField),
-        //         sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-        //         sortField);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField),
+                sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+                sortField);
         return queryWrapper;
     }
 
