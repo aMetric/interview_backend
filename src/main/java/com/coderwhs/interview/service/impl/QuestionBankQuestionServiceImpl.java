@@ -61,16 +61,16 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     public void validQuestionBankQuestion(QuestionBankQuestion questionBankQuestion, boolean add) {
         ThrowUtils.throwIf(questionBankQuestion == null, ErrorCode.PARAMS_ERROR);
         // 题目和题库必须存在
-        Long questionId = questionBankQuestion.getQuestionId();
-        if (questionId != null) {
-            Question question = questionService.getById(questionId);
-            ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR, "题目不存在");
-        }
-        Long questionBankId = questionBankQuestion.getQuestionBankId();
-        if (questionBankId != null) {
-            QuestionBank questionBank = questionBankService.getById(questionBankId);
-            ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR, "题库不存在");
-        }
+        // Long questionId = questionBankQuestion.getQuestionId();
+        // if (questionId != null) {
+        //     Question question = questionService.getById(questionId);
+        //     ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR, "题目不存在");
+        // }
+        // Long questionBankId = questionBankQuestion.getQuestionBankId();
+        // if (questionBankId != null) {
+        //     QuestionBank questionBank = questionBankService.getById(questionBankId);
+        //     ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR, "题库不存在");
+        // }
     }
 
     /**
@@ -88,36 +88,22 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         // todo 从对象中取值
         Long id = questionBankQuestionQueryRequest.getId();
         Long notId = questionBankQuestionQueryRequest.getNotId();
-        String title = questionBankQuestionQueryRequest.getTitle();
-        String content = questionBankQuestionQueryRequest.getContent();
-        String searchText = questionBankQuestionQueryRequest.getSearchText();
         String sortField = questionBankQuestionQueryRequest.getSortField();
         String sortOrder = questionBankQuestionQueryRequest.getSortOrder();
-        List<String> tagList = questionBankQuestionQueryRequest.getTags();
+        Long questionBankId = questionBankQuestionQueryRequest.getQuestionBankId();
+        Long questionId = questionBankQuestionQueryRequest.getQuestionId();
         Long userId = questionBankQuestionQueryRequest.getUserId();
         // todo 补充需要的查询条件
-        // 从多字段中搜索
-        if (StringUtils.isNotBlank(searchText)) {
-            // 需要拼接查询条件
-            queryWrapper.and(qw -> qw.like("title", searchText).or().like("content", searchText));
-        }
-        // 模糊查询
-        queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
-        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
-        // JSON 数组查询
-        if (CollUtil.isNotEmpty(tagList)) {
-            for (String tag : tagList) {
-                queryWrapper.like("tags", "\"" + tag + "\"");
-            }
-        }
         // 精确查询
         queryWrapper.ne(ObjectUtils.isNotEmpty(notId), "id", notId);
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(questionBankId), "questionBankId", questionBankId);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(questionId), "questionId", questionId);
         // 排序规则
         queryWrapper.orderBy(SqlUtils.validSortField(sortField),
-                sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                sortField);
+          sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+          sortField);
         return queryWrapper;
     }
 
