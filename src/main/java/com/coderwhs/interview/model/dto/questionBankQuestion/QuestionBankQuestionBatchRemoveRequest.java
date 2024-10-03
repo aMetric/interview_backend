@@ -3,12 +3,13 @@ package com.coderwhs.interview.model.dto.questionBankQuestion;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * 创建题库题目关联请求
+ * 批量从题库移除题目关联请求
  */
 @Data
-public class QuestionBankQuestionAddRequest implements Serializable {
+public class QuestionBankQuestionBatchRemoveRequest implements Serializable {
 
     /**
      * 题库 id
@@ -16,9 +17,9 @@ public class QuestionBankQuestionAddRequest implements Serializable {
     private Long questionBankId;
 
     /**
-     * 题目 id
+     * 题目 id 列表
      */
-    private Long questionId;
+    private List<Long> questionIdList;
 
     private static final long serialVersionUID = 1L;
 }

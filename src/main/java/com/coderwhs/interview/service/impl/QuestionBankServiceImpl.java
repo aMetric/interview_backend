@@ -78,11 +78,11 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         Long id = questionBankQueryRequest.getId();
         Long notId = questionBankQueryRequest.getNotId();
         String title = questionBankQueryRequest.getTitle();
-        String content = questionBankQueryRequest.getContent();
         String searchText = questionBankQueryRequest.getSearchText();
-        String sortField = questionBankQueryRequest.getSortField();
-        String sortOrder = questionBankQueryRequest.getSortOrder();
-        List<String> tagList = questionBankQueryRequest.getTags();
+        // String sortField = questionBankQueryRequest.getSortField();
+        // String sortOrder = questionBankQueryRequest.getSortOrder();
+        String description = questionBankQueryRequest.getDescription();
+        String picture = questionBankQueryRequest.getPicture();
         Long userId = questionBankQueryRequest.getUserId();
         // todo 补充需要的查询条件
         // 从多字段中搜索
@@ -92,21 +92,17 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         }
         // 模糊查询
         queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
-        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
-        // JSON 数组查询
-        if (CollUtil.isNotEmpty(tagList)) {
-            for (String tag : tagList) {
-                queryWrapper.like("tags", "\"" + tag + "\"");
-            }
-        }
+        queryWrapper.like(StringUtils.isNotBlank(description), "description", description);
+        queryWrapper.like(StringUtils.isNotBlank(picture), "picture", picture);
+
         // 精确查询
         queryWrapper.ne(ObjectUtils.isNotEmpty(notId), "id", notId);
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
         // 排序规则
-        queryWrapper.orderBy(SqlUtils.validSortField(sortField),
-                sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                sortField);
+        // queryWrapper.orderBy(SqlUtils.validSortField(sortField),
+        //         sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+        //         sortField);
         return queryWrapper;
     }
 
