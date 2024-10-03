@@ -34,33 +34,33 @@ public class QuestionBankQuestion {
      */
     @TableField(value = "questionBankId")
     @ApiModelProperty(value="题库 id")
-    private Long questionbankid;
+    private Long questionBankId;
 
     /**
      * 题目 id
      */
     @TableField(value = "questionId")
     @ApiModelProperty(value="题目 id")
-    private Long questionid;
+    private Long questionId;
 
     /**
      * 创建用户 id
      */
     @TableField(value = "userId")
     @ApiModelProperty(value="创建用户 id")
-    private Long userid;
+    private Long userId;
 
     /**
      * 创建时间
      */
     @TableField(value = "createTime")
     @ApiModelProperty(value="创建时间")
-    private Date createtime;
+    private Date createTime;
 
     /**
      * 更新时间
      */
     @TableField(value = "updateTime")
     @ApiModelProperty(value="更新时间")
-    private Date updatetime;
+    private Date updateTime;
 }

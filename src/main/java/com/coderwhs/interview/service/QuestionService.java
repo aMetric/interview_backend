@@ -1,25 +1,50 @@
 package com.coderwhs.interview.service;
 
-import java.util.List;
-import com.coderwhs.interview.model.entity.Question;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.coderwhs.interview.model.dto.question.QuestionQueryRequest;
+import com.coderwhs.interview.model.entity.Question;
+import com.coderwhs.interview.model.vo.QuestionVO;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * 题目服务
+ */
+public interface QuestionService extends IService<Question> {
+
     /**
- * @Author  whs
- * @Date  2024/10/3 12:32
- * @description: 
-*/
+     * 校验数据
+     *
+     * @param question
+     * @param add 对创建的数据进行校验
+     */
+    void validQuestion(Question question, boolean add);
 
-public interface QuestionService extends IService<Question>{
+    /**
+     * 获取查询条件
+     *
+     * @param questionQueryRequest
+     * @return
+     */
+    QueryWrapper<Question> getQueryWrapper(QuestionQueryRequest questionQueryRequest);
 
+    /**
+     * 获取题目封装
+     *
+     * @param question
+     * @param request
+     * @return
+     */
+    QuestionVO getQuestionVO(Question question, HttpServletRequest request);
 
-    int updateBatch(List<Question> list);
-
-    int updateBatchSelective(List<Question> list);
-
-    int batchInsert(List<Question> list);
-
-    int insertOrUpdate(Question record);
-
-    int insertOrUpdateSelective(Question record);
-
+    /**
+     * 分页获取题目封装
+     *
+     * @param questionPage
+     * @param request
+     * @return
+     */
+    Page<QuestionVO> getQuestionVOPage(Page<Question> questionPage, HttpServletRequest request);
 }

@@ -1,25 +1,50 @@
 package com.coderwhs.interview.service;
 
-import java.util.List;
-import com.coderwhs.interview.model.entity.QuestionBankQuestion;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.coderwhs.interview.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
+import com.coderwhs.interview.model.entity.QuestionBankQuestion;
+import com.coderwhs.interview.model.vo.QuestionBankQuestionVO;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * 题库题目关联服务
+ */
+public interface QuestionBankQuestionService extends IService<QuestionBankQuestion> {
+
     /**
- * @Author  whs
- * @Date  2024/10/3 12:33
- * @description: 
-*/
+     * 校验数据
+     *
+     * @param questionBankQuestion
+     * @param add 对创建的数据进行校验
+     */
+    void validQuestionBankQuestion(QuestionBankQuestion questionBankQuestion, boolean add);
 
-public interface QuestionBankQuestionService extends IService<QuestionBankQuestion>{
+    /**
+     * 获取查询条件
+     *
+     * @param questionBankQuestionQueryRequest
+     * @return
+     */
+    QueryWrapper<QuestionBankQuestion> getQueryWrapper(QuestionBankQuestionQueryRequest questionBankQuestionQueryRequest);
 
+    /**
+     * 获取题库题目关联封装
+     *
+     * @param questionBankQuestion
+     * @param request
+     * @return
+     */
+    QuestionBankQuestionVO getQuestionBankQuestionVO(QuestionBankQuestion questionBankQuestion, HttpServletRequest request);
 
-    int updateBatch(List<QuestionBankQuestion> list);
-
-    int updateBatchSelective(List<QuestionBankQuestion> list);
-
-    int batchInsert(List<QuestionBankQuestion> list);
-
-    int insertOrUpdate(QuestionBankQuestion record);
-
-    int insertOrUpdateSelective(QuestionBankQuestion record);
-
+    /**
+     * 分页获取题库题目关联封装
+     *
+     * @param questionBankQuestionPage
+     * @param request
+     * @return
+     */
+    Page<QuestionBankQuestionVO> getQuestionBankQuestionVOPage(Page<QuestionBankQuestion> questionBankQuestionPage, HttpServletRequest request);
 }

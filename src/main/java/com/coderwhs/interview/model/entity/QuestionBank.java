@@ -52,28 +52,28 @@ public class QuestionBank {
      */
     @TableField(value = "userId")
     @ApiModelProperty(value="创建用户 id")
-    private Long userid;
+    private Long userId;
 
     /**
      * 编辑时间
      */
     @TableField(value = "editTime")
     @ApiModelProperty(value="编辑时间")
-    private Date edittime;
+    private Date editTime;
 
     /**
      * 创建时间
      */
     @TableField(value = "createTime")
     @ApiModelProperty(value="创建时间")
-    private Date createtime;
+    private Date createTime;
 
     /**
      * 更新时间
      */
     @TableField(value = "updateTime")
     @ApiModelProperty(value="更新时间")
-    private Date updatetime;
+    private Date updateTime;
 
     /**
      * 是否删除
@@ -81,5 +81,5 @@ public class QuestionBank {
     @TableField(value = "isDelete")
     @ApiModelProperty(value="是否删除")
     @TableLogic
-    private Byte isdelete;
+    private Byte isDelete;
 }
