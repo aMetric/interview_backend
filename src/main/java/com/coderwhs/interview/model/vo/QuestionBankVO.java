@@ -2,6 +2,7 @@ package com.coderwhs.interview.model.vo;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.coderwhs.interview.model.entity.Question;
 import com.coderwhs.interview.model.entity.QuestionBank;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -59,7 +60,7 @@ public class QuestionBankVO implements Serializable {
     /**
      * 题库里的题目列表（分页）
      */
-    Page<QuestionVO> questionPage;
+    Page<Question> questionPage;
 
     /**
      * 封装类转对象
