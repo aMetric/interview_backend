@@ -337,7 +337,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @PostMapping("/get/sign_in")
+    @GetMapping("/get/sign_in")
     public BaseResponse<List<Integer>> getUserSignInRecord(Integer year, HttpServletRequest request) {
         //必须要登入才能签到
         User loginUser = userService.getLoginUser(request);
