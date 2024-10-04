@@ -314,4 +314,36 @@ public class UserController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
+    /**
+     * 更新个人信息
+     *
+     * @param request
+     * @return 当前是否签到成功
+     */
+    @PostMapping("/add/sign_in")
+    public BaseResponse<Boolean> addUserSignIn(HttpServletRequest request) {
+        //必须要登入才能签到
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null,ErrorCode.NOT_LOGIN_ERROR);
+
+        boolean res = userService.addUserSignIn(loginUser.getId());
+        return ResultUtils.success(res);
+    }
+
+    /**
+     * 获取一年的签到记录
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/get/sign_in")
+    public BaseResponse<List<Integer>> getUserSignInRecord(Integer year, HttpServletRequest request) {
+        //必须要登入才能签到
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null,ErrorCode.NOT_LOGIN_ERROR);
+
+        List<Integer> res = userService.getUserSignInRecord(loginUser.getId(), year);
+        return ResultUtils.success(res);
+    }
 }

@@ -2,6 +2,7 @@ package com.coderwhs.interview.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ import lombok.Data;
  */
 @Data
 @TableName(value = "`user`")
-public class User {
+public class User implements Serializable {
   @TableField(exist = false)
   private static final long serialVersionUID = 1L;
   /**

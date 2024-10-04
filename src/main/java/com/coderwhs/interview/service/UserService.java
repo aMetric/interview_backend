@@ -6,6 +6,7 @@ import com.coderwhs.interview.model.dto.user.UserQueryRequest;
 import com.coderwhs.interview.model.entity.User;
 import com.coderwhs.interview.model.vo.LoginUserVO;
 import com.coderwhs.interview.model.vo.UserVO;
+
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
@@ -114,5 +115,15 @@ public interface UserService extends IService<User> {
      * @return
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 添加用户签到记录
+     */
+    boolean addUserSignIn(long userId);
+
+    /**
+     * 获取一年的签到记录
+     */
+    List<Integer> getUserSignInRecord(long userId, Integer year);
 
 }
