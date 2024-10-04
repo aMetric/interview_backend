@@ -57,6 +57,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         ThrowUtils.throwIf(question == null, ErrorCode.PARAMS_ERROR);
         // todo 从对象中取值
         String title = question.getTitle();
+        String content = question.getContent();
         // 创建数据时，参数不能为空
         if (add) {
             // todo 补充校验规则
@@ -66,6 +67,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // todo 补充校验规则
         if (StringUtils.isNotBlank(title)) {
             ThrowUtils.throwIf(title.length() > 80, ErrorCode.PARAMS_ERROR, "标题过长");
+        }
+        if (StringUtils.isNotBlank(content)) {
+            ThrowUtils.throwIf(content.length() > 10240, ErrorCode.PARAMS_ERROR, "内容过长");
         }
     }
 
@@ -114,8 +118,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
         // 排序规则
         queryWrapper.orderBy(SqlUtils.validSortField(sortField),
-                sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                sortField);
+          sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+          sortField);
         return queryWrapper;
     }
 
@@ -186,12 +190,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     /**
-     * 根据题库查询题目列表接口
+     * 分页获取题目列表
      *
      * @param questionQueryRequest
      * @return
      */
-    @Override
     public Page<Question> listQuestionByPage(QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
@@ -212,12 +215,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                   .collect(Collectors.toSet());
                 // 复用原有题目表的查询条件
                 queryWrapper.in("id", questionIdSet);
+            } else {
+                // 题库为空，则返回空列表
+                return new Page<>(current, size, 0);
             }
         }
         // 查询数据库
         Page<Question> questionPage = this.page(new Page<>(current, size), queryWrapper);
         return questionPage;
     }
-
 
 }

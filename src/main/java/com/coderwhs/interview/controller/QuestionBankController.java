@@ -18,6 +18,7 @@ import com.coderwhs.interview.model.entity.Question;
 import com.coderwhs.interview.model.entity.QuestionBank;
 import com.coderwhs.interview.model.entity.User;
 import com.coderwhs.interview.model.vo.QuestionBankVO;
+import com.coderwhs.interview.model.vo.QuestionVO;
 import com.coderwhs.interview.service.QuestionBankService;
 import com.coderwhs.interview.service.QuestionService;
 import com.coderwhs.interview.service.UserService;
@@ -130,9 +131,9 @@ public class QuestionBankController {
     }
 
     /**
-     * 获取题库详情接口
+     * 根据 id 获取题库（封装类）
+     *
      * @param questionBankQueryRequest
-     * @param request
      * @return
      */
     @GetMapping("/get/vo")
@@ -150,13 +151,16 @@ public class QuestionBankController {
         if (needQueryQuestionList) {
             QuestionQueryRequest questionQueryRequest = new QuestionQueryRequest();
             questionQueryRequest.setQuestionBankId(id);
+            // 可以按需支持更多的题目搜索参数，比如分页
+            questionQueryRequest.setPageSize(questionBankQueryRequest.getPageSize());
+            questionQueryRequest.setCurrent(questionBankQueryRequest.getCurrent());
             Page<Question> questionPage = questionService.listQuestionByPage(questionQueryRequest);
-            questionBankVO.setQuestionPage(questionPage);
+            Page<QuestionVO> questionVOPage = questionService.getQuestionVOPage(questionPage, request);
+            questionBankVO.setQuestionPage(questionVOPage);
         }
         // 获取封装类
         return ResultUtils.success(questionBankVO);
     }
-
 
     /**
      * 分页获取题库列表（仅管理员可用）
@@ -171,7 +175,7 @@ public class QuestionBankController {
         long size = questionBankQueryRequest.getPageSize();
         // 查询数据库
         Page<QuestionBank> questionBankPage = questionBankService.page(new Page<>(current, size),
-                questionBankService.getQueryWrapper(questionBankQueryRequest));
+          questionBankService.getQueryWrapper(questionBankQueryRequest));
         return ResultUtils.success(questionBankPage);
     }
 
@@ -184,14 +188,14 @@ public class QuestionBankController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionBankVO>> listQuestionBankVOByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest,
-                                                               HttpServletRequest request) {
+                                                                       HttpServletRequest request) {
         long current = questionBankQueryRequest.getCurrent();
         long size = questionBankQueryRequest.getPageSize();
         // 限制爬虫
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size > 200, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         Page<QuestionBank> questionBankPage = questionBankService.page(new Page<>(current, size),
-                questionBankService.getQueryWrapper(questionBankQueryRequest));
+          questionBankService.getQueryWrapper(questionBankQueryRequest));
         // 获取封装类
         return ResultUtils.success(questionBankService.getQuestionBankVOPage(questionBankPage, request));
     }
@@ -205,7 +209,7 @@ public class QuestionBankController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionBankVO>> listMyQuestionBankVOByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest,
-                                                                 HttpServletRequest request) {
+                                                                         HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
         // 补充查询条件，只查询当前登录用户的数据
         User loginUser = userService.getLoginUser(request);
@@ -216,7 +220,7 @@ public class QuestionBankController {
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         Page<QuestionBank> questionBankPage = questionBankService.page(new Page<>(current, size),
-                questionBankService.getQueryWrapper(questionBankQueryRequest));
+          questionBankService.getQueryWrapper(questionBankQueryRequest));
         // 获取封装类
         return ResultUtils.success(questionBankService.getQuestionBankVOPage(questionBankPage, request));
     }
