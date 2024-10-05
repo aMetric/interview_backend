@@ -2,6 +2,8 @@ package com.coderwhs.interview.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.coderwhs.interview.model.entity.Question;
+
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,4 +23,11 @@ public interface QuestionMapper extends BaseMapper<Question> {
     int insertOrUpdate(Question record);
 
     int insertOrUpdateSelective(Question record);
+
+    /**
+     * 查询被逻辑删除的数据
+     * @param fiveMinutesAgoDate
+     * @return
+     */
+    List<Question> listQuestionWithDelete(Date fiveMinutesAgoDate);
 }

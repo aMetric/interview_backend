@@ -310,4 +310,8 @@
       </if>
     </trim>
   </insert>
+
+  <select id="listQuestionWithDelete" resultMap="BaseResultMap">
+    select * from question where updateTime >= #{fiveMinutesAgoDate}
+  </select>
 </mapper>

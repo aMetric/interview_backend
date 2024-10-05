@@ -246,5 +246,25 @@ public class QuestionController {
         return ResultUtils.success(true);
     }
 
+    /**
+     * 分页获取题目列表（封装类）
+     *
+     * @param questionQueryRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/search/page/vo")
+    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
+                                                               HttpServletRequest request) {
+        ThrowUtils.throwIf(questionQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        long size = questionQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        // 查询es
+        Page<Question> questionPage = questionService.searchFromEs(questionQueryRequest);
+        // 获取封装类
+        return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+    }
+
     // endregion
 }
