@@ -35,6 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -215,6 +219,18 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         QuestionBank questionBank = questionBankService.getById(questionBankId);
         ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR, "题库不存在");
 
+        //自定义线程池 io密集型
+        ThreadPoolExecutor customExecutor = new ThreadPoolExecutor(
+          20,
+          50,
+          60L,
+          TimeUnit.SECONDS,
+          new LinkedBlockingQueue<>(10000),
+          new ThreadPoolExecutor.CallerRunsPolicy()  //由调用线程去处理任务
+        );
+        //保存所有批次任务
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
         //分批处理避免长事务
         int batchSize = 1000;
         int validQuestionIdListSize = validQuestionIdList.size();
@@ -231,8 +247,22 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
             //使用事务处理每一批次数据
             //获取代理
             QuestionBankQuestionService questionBankQuestionService = (QuestionBankQuestionServiceImpl) AopContext.currentProxy();
-            questionBankQuestionService.batchAddQuestionsToBankInner(bankQuestions);
+
+            //异步处理每一批数据
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                questionBankQuestionService.batchAddQuestionsToBankInner(bankQuestions);
+            }, customExecutor).exceptionally(ex -> {
+                log.error("批处理任务执行失败",ex);
+                return null;
+            });
+            //添加到任务列表
+            futures.add(future);
         }
+        //等待所有批次完成操作才往下进行
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        //执行结束，关闭线程池
+        customExecutor.shutdown();
     }
 
     /**
