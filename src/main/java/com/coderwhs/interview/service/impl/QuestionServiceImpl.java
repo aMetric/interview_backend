@@ -260,8 +260,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
          // 构造查询条件
          BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-         // 过滤
-         boolQueryBuilder.filter(QueryBuilders.termQuery("isDelete", 0));
+         // 过滤 todo 暂时不开启
+         // boolQueryBuilder.filter(QueryBuilders.termQuery("isDelete", 0));
          if (id != null) {
              boolQueryBuilder.filter(QueryBuilders.termQuery("id", id));
          }
@@ -298,12 +298,12 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
          PageRequest pageRequest = PageRequest.of(current, pageSize);
          // 构造查询
          NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-           .withQuery(boolQueryBuilder)
-           .withPageable(pageRequest)
-           .withSorts(sortBuilder)
-           .build();
+                                       .withQuery(boolQueryBuilder)
+                                       .withPageable(pageRequest)
+                                       .withSorts(sortBuilder)
+                                       .build();
          SearchHits<QuestionEsDTO> searchHits = elasticsearchRestTemplate.search(searchQuery, QuestionEsDTO.class);
-         // 复用 MySQL / MyBatis Plus 的分页对象，封装返回结果
+         // 复用 mp的分页对象，封装返回结果
          Page<Question> page = new Page<>();
          page.setTotal(searchHits.getTotalHits());
          List<Question> resourceList = new ArrayList<>();
