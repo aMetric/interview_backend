@@ -198,22 +198,29 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
         // 检查题目 id 是否存在
         LambdaQueryWrapper<Question> questionLambdaQueryWrapper = Wrappers.lambdaQuery(Question.class)
-          .select(Question::getUserId)
+          .select(Question::getId)
           .in(Question::getId, questionIdList);
-        // 合法的题目 id
+
+        // 合法的题目 id 列表
         List<Long> validQuestionIdList = questionService.listObjs(questionLambdaQueryWrapper, obj -> (Long) obj);
-        ThrowUtils.throwIf(CollUtil.isEmpty(validQuestionIdList), ErrorCode.PARAMS_ERROR, "合法的题目列表为空");
+        ThrowUtils.throwIf(CollUtil.isEmpty(validQuestionIdList), ErrorCode.PARAMS_ERROR, "合法的题目 id 列表为空");
 
-        //检查哪些题目不存题库中，避免重复插入
+        // 检查哪些题目还存在于题库中，避免重复插入
         LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
-          //QuestionBankQuestion::getQuestionBankId 是通过 Lambda 表达式指定 QuestionBankQuestion 实体类中的 getQuestionBankId 方法，最终代表表中的 question_bank_id 列。
-          .eq(QuestionBankQuestion::getQuestionBankId, questionBankId) //相当于WHERE question_bank_id = {questionBankId}
-          .notIn(QuestionBankQuestion::getQuestionId, validQuestionIdList);//相当于AND question_id NOT IN (validQuestionIdList)。
+          .eq(QuestionBankQuestion::getQuestionBankId, questionBankId)
+          .in(QuestionBankQuestion::getQuestionId, validQuestionIdList);
+        List<QuestionBankQuestion> existQuestionList = this.list(lambdaQueryWrapper);
 
-        List<QuestionBankQuestion> notExistQuestionList = this.list(lambdaQueryWrapper);
+        // 已存在于题库中的题目 id
+        Set<Long> existQuestionIdSet = existQuestionList.stream()
+          .map(QuestionBankQuestion::getId)
+          .collect(Collectors.toSet());
 
-        validQuestionIdList = notExistQuestionList.stream().map(QuestionBankQuestion::getId).collect(Collectors.toList());
-        ThrowUtils.throwIf(CollUtil.isEmpty(validQuestionIdList),ErrorCode.PARAMS_ERROR,"所有题目都已经存在于题库中");
+        // 已存在于题库中的题目 id，不需要再次添加
+        validQuestionIdList = validQuestionIdList.stream().filter(questionId -> {
+            return !existQuestionIdSet.contains(questionId);
+        }).collect(Collectors.toList());
+        ThrowUtils.throwIf(CollUtil.isEmpty(validQuestionIdList), ErrorCode.PARAMS_ERROR, "所有题目都已存在于题库中");
 
         // 检查题库 id 是否存在
         QuestionBank questionBank = questionBankService.getById(questionBankId);
@@ -234,7 +241,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         //分批处理避免长事务
         int batchSize = 1000;
         int validQuestionIdListSize = validQuestionIdList.size();
-        for (int i = 0; i < validQuestionIdListSize; i++) {
+        for (int i = 0; i < validQuestionIdListSize; i+=batchSize) {
             //依次生成每批次的数据
             List<Long> subList = validQuestionIdList.subList(i, Math.min(i + batchSize, validQuestionIdListSize));
             List<QuestionBankQuestion> bankQuestions = subList.stream().map(questionId -> {
@@ -250,7 +257,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
             //异步处理每一批数据
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                questionBankQuestionService.batchAddQuestionsToBankInner(bankQuestions);
+                questionBankQuestionService.batchAddQuestionsToBankInner(bankQuestions,batchSize);
             }, customExecutor).exceptionally(ex -> {
                 log.error("批处理任务执行失败",ex);
                 return null;
@@ -262,7 +269,16 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
         //执行结束，关闭线程池
-        customExecutor.shutdown();
+        try {
+            customExecutor.shutdown();
+            if (!customExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
+                customExecutor.shutdownNow(); // 如果任务在 60 秒内未结束，强制停止
+            }
+        } catch (InterruptedException ex) {
+            customExecutor.shutdownNow();
+            Thread.currentThread().interrupt(); // 保持中断状态
+        }
+
     }
 
     /**
@@ -272,9 +288,9 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchAddQuestionsToBankInner(List<QuestionBankQuestion> questionBankQuestions) {
+    public void batchAddQuestionsToBankInner(List<QuestionBankQuestion> questionBankQuestions,int batchSize) {
         try {
-            boolean result = this.saveBatch(questionBankQuestions);
+            boolean result = this.saveBatch(questionBankQuestions, batchSize); // 显式传入批量大小
             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "向题库添加题目失败");
         } catch (DataIntegrityViolationException e) {
             log.error("数据库唯一键冲突或违反其他完整性约束, 错误信息: {}", e.getMessage());
