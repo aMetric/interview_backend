@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 /**
  * 增量同步题目到 es
  */
-// todo 取消注释开启任务
-@Component
+// todo 取消注释开启任务，上线部署时候打开
+// @Component
 @Slf4j
 public class IncSyncQuestionToEs {
 
