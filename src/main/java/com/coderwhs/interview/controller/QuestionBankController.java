@@ -22,6 +22,7 @@ import com.coderwhs.interview.model.vo.QuestionVO;
 import com.coderwhs.interview.service.QuestionBankService;
 import com.coderwhs.interview.service.QuestionService;
 import com.coderwhs.interview.service.UserService;
+import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -141,6 +142,18 @@ public class QuestionBankController {
         ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
         Long id = questionBankQueryRequest.getId();
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
+
+        //生成key
+        String key = "bank_detail_" + id;
+        //如果是热key
+        if (JdHotKeyStore.isHotKey(key)){
+            //从本地缓存中获取值
+            Object obj = JdHotKeyStore.get(key);
+            if (obj != null){
+                return ResultUtils.success((QuestionBankVO)obj);
+            }
+        }
+
         // 查询数据库
         QuestionBank questionBank = questionBankService.getById(id);
         ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR);
@@ -158,6 +171,10 @@ public class QuestionBankController {
             Page<QuestionVO> questionVOPage = questionService.getQuestionVOPage(questionPage, request);
             questionBankVO.setQuestionPage(questionVOPage);
         }
+
+        //设置本地缓存
+        JdHotKeyStore.smartSet(key,questionBankVO);
+
         // 获取封装类
         return ResultUtils.success(questionBankVO);
     }

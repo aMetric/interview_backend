@@ -88,3 +88,9 @@ spring:
     uris: http://localhost:9200
     username: root
     password: 123456
+hotkey:
+  app-name: interview
+  caffeine-size: 10000
+  # 推送频率，每1000条推送一次
+  push-period: 1000
+  etcd-server: http://localhost:2379
