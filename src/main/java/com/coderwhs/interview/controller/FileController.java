@@ -1,22 +1,16 @@
 package com.coderwhs.interview.controller;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
-import com.coderwhs.interview.constant.FileConstant;
-import com.coderwhs.interview.exception.BusinessException;
-import com.coderwhs.interview.service.UserService;
 import com.coderwhs.interview.common.BaseResponse;
 import com.coderwhs.interview.common.ErrorCode;
 import com.coderwhs.interview.common.ResultUtils;
+import com.coderwhs.interview.constant.FileConstant;
+import com.coderwhs.interview.exception.BusinessException;
 import com.coderwhs.interview.manager.CosManager;
 import com.coderwhs.interview.model.dto.file.UploadFileRequest;
 import com.coderwhs.interview.model.entity.User;
 import com.coderwhs.interview.model.enums.FileUploadBizEnum;
-
-import java.io.File;
-import java.util.Arrays;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import com.coderwhs.interview.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.Arrays;
 
 /**
  * 文件接口
