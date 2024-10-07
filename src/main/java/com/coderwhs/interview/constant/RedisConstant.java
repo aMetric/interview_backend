@@ -12,6 +12,11 @@ public interface RedisConstant {
    */
   String USER_SIGN_IN_REDIS_KEY_PREFIX = "user:signins";
 
+  /**
+   * 记录用户调用次数的redis key常量
+   */
+  String USER_ACCESS = "user:access";
+
   static String getUserSignInRedisKey(int year, long userId){
     return String.format("%s:%s:%S",USER_SIGN_IN_REDIS_KEY_PREFIX,year,userId);
   }

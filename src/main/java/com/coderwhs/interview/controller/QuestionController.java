@@ -1,6 +1,7 @@
 package com.coderwhs.interview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
@@ -14,9 +15,11 @@ import com.coderwhs.interview.common.BaseResponse;
 import com.coderwhs.interview.common.DeleteRequest;
 import com.coderwhs.interview.common.ErrorCode;
 import com.coderwhs.interview.common.ResultUtils;
+import com.coderwhs.interview.constant.RedisConstant;
 import com.coderwhs.interview.constant.UserConstant;
 import com.coderwhs.interview.exception.BusinessException;
 import com.coderwhs.interview.exception.ThrowUtils;
+import com.coderwhs.interview.manager.CounterManager;
 import com.coderwhs.interview.model.dto.question.QuestionAddRequest;
 import com.coderwhs.interview.model.dto.question.QuestionEditRequest;
 import com.coderwhs.interview.model.dto.question.QuestionQueryRequest;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 题目接口
@@ -49,6 +53,9 @@ public class QuestionController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private CounterManager counterManager;
 
     // region 增删改查
 
@@ -151,11 +158,45 @@ public class QuestionController {
     @GetMapping("/get/vo")
     public BaseResponse<QuestionVO> getQuestionVOById(long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
+        //检测爬虫
+        User loginUser = userService.getLoginUser(request);
+        crawlerDetect(loginUser.getId());
         // 查询数据库
         Question question = questionService.getById(id);
         ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR);
         // 获取封装类
         return ResultUtils.success(questionService.getQuestionVO(question, request));
+    }
+
+    /**
+     * 检测爬虫
+     */
+    private void crawlerDetect(long userId){
+        //调用多少次就告警
+        final int WARN_COUNT = 10;
+        //调用多少次就封号
+        final int BAN_COUNT = 20;
+        //拼接访问的Key
+        String redisKey = RedisConstant.USER_ACCESS + userId;
+        //统计一分钟内访问次数，180秒后过期
+        long count = counterManager.incrAndGetCounter(redisKey, 1, TimeUnit.MINUTES, 180);
+        System.out.println("---------------------------------------count = " + count);
+        //是否封号
+        if (count > BAN_COUNT){
+            //踢下线
+            StpUtil.kickout(userId);
+            //封号
+            User user = new User();
+            user.setId(userId);
+            user.setUserRole("ban");
+            userService.updateById(user);
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"访问次数过多，已被封号处理");
+        }
+        //是否告警，一定要用等于号，不然会一直收到告警
+        if (count == WARN_COUNT){
+            //todo 改为向管理员发送邮件消息
+            throw new BusinessException(110,"警告：访问过于频繁");
+        }
     }
 
     /**
