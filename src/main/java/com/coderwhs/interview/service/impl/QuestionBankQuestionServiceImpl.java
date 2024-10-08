@@ -228,8 +228,8 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
         //自定义线程池 io密集型
         ThreadPoolExecutor customExecutor = new ThreadPoolExecutor(
-          20,
-          50,
+          4,
+          8,
           60L,
           TimeUnit.SECONDS,
           new LinkedBlockingQueue<>(10000),
