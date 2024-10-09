@@ -2,6 +2,7 @@ package com.coderwhs.interview.config;
 
 import com.jd.platform.hotkey.client.ClientStarter;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,8 @@ public class HotKeyConfig {
   /**
    * Etcd 服务器完整地址
    */
-  private String etcdServer = "http://127.0.0.1:2379";
+  @Value("${hotkey.etcd-server}")
+  private String etcdServer;
 
   /**
    * 应用名称
